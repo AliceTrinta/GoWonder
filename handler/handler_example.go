@@ -4,13 +4,18 @@ import (
 	"GoWonder/conf/mongo/dao"
 	"GoWonder/model"
 	"encoding/json"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2/bson"
-	"net/http"
 )
 
+//Here, we have an example of a handler to deal with the http requests.
+
+//The con variable is an instance of a databse connection.
 var con = dao.MongoDB{}
 
+//Some way to deal with errors.
 func respondWithError(w http.ResponseWriter, code int, msg string) {
 	respondWithJson(w, code, map[string]string{"error": msg})
 }
@@ -22,6 +27,7 @@ func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
+//This function will deal with a request to create an object in the database.
 func Create(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var wonder model.Wonderland
@@ -37,6 +43,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusCreated, wonder)
 }
 
+//This function will deal with a request to get all the objects stores in the database.
 func GetAll(w http.ResponseWriter, r *http.Request) {
 	wonder, err := con.GetAll()
 	if err != nil {
@@ -46,6 +53,7 @@ func GetAll(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, wonder)
 }
 
+//This function will deal with a request to get an specific object at the dabase.
 func GetByID(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	wonder, err := con.GetByID(params["id"])
@@ -56,6 +64,7 @@ func GetByID(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, wonder)
 }
 
+//This function will deal with a request to do a update at an object at the database.
 func Update(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	params := mux.Vars(r)
@@ -71,6 +80,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, map[string]string{"result": " success!"})
 }
 
+//This function will deal with a request to delet an object at the database.
 func Delete(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	params := mux.Vars(r)

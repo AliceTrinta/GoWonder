@@ -6,17 +6,17 @@ import (
 	"net/http"
 )
 
-func Begin() http.Handler{
+//Here, at the Begin Function, the routes are configured.
+func Begin() http.Handler {
 
 	routes := []route.Conf{
-		{"/", handler.Index, "GET"},
-		{"/create", handler.Create, "POST"},
-		{"/all", handler.GetAll, "GET"},
-		{"/get/{id}", handler.GetByID, "GET"},
-		{"/up/{id}", handler.Update, "PUT"},
-		{"/del/{id}", handler.Delete, "DELETE"},
+		{Path: "/", F: handler.Index, Method: "GET"},
+		{Path: "/create", F: handler.Create, Method: "POST"},
+		{Path: "/all", F: handler.GetAll, Method: "GET"},
+		{Path: "/get/{id}", F: handler.GetByID, Method: "GET"},
+		{Path: "/up/{id}", F: handler.Update, Method: "PUT"},
+		{Path: "/del/{id}", F: handler.Delete, Method: "DELETE"},
 	}
 
 	return route.Route(routes)
 }
-
